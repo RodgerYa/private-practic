@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.xingren:vcommon:3.0.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/xingren/vcommon/3.0.0/vcommon-3.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/xingren/vcommon/3.0.0/vcommon-3.0.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/xingren/vcommon/3.0.0/vcommon-3.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
