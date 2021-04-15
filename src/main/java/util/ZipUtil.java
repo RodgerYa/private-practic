@@ -8,7 +8,6 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
-import service.CosRemoteService;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -19,18 +18,18 @@ import java.util.zip.ZipOutputStream;
 
 @Log4j
 public class ZipUtil {
-    
+
     /**
-     * 使用GBK编码可以避免压缩中文文件名乱码 
+     * 使用GBK编码可以避免压缩中文文件名乱码
      */
     private static final String CHINESE_CHARSET = "GBK";
 
     /**
-     * 文件读取缓冲区大小 
+     * 文件读取缓冲区大小
      */
     private static final int CACHE_SIZE = 1024;
 
-    private ZipUtil(){
+    private ZipUtil() {
         // 私用构造主法.因为此类是工具类.
     }
 
@@ -38,21 +37,19 @@ public class ZipUtil {
 
     private static List<String> failures = Lists.newArrayList();
 
-    private static CosRemoteService cosRemoteService = new CosRemoteService();
-
     public static Integer count = 0;
 
     /**
-     * <p> 
-     * 压缩文件 
-     * </p> 
+     * <p>
+     * 压缩文件
+     * </p>
      *
      * @param sourceFolder 需压缩文件 或者 文件夹 路径
-     * @param zipFilePath 压缩文件输出路径 
+     * @param zipFilePath  压缩文件输出路径
      * @throws Exception
      */
     public static void zip(String sourceFolder, String zipFilePath) throws Exception {
-        log.debug("开始压缩 ["+sourceFolder+"] 到 ["+zipFilePath+"]");
+        log.debug("开始压缩 [" + sourceFolder + "] 到 [" + zipFilePath + "]");
         OutputStream out = new FileOutputStream(zipFilePath);
         BufferedOutputStream bos = new BufferedOutputStream(out);
         ZipOutputStream zos = new ZipOutputStream(bos);
@@ -69,16 +66,16 @@ public class ZipUtil {
         zos.close();
         bos.close();
         out.close();
-        log.debug("压缩 ["+sourceFolder+"] 完成！");
+        log.debug("压缩 [" + sourceFolder + "] 完成！");
     }
 
     /**
-     * <p> 
-     * 压缩文件 
-     * </p> 
+     * <p>
+     * 压缩文件
+     * </p>
      *
      * @param sourceFolders 一组 压缩文件夹 或 文件
-     * @param zipFilePath 压缩文件输出路径 
+     * @param zipFilePath   压缩文件输出路径
      * @throws Exception
      */
     public static void zip(String[] sourceFolders, String zipFilePath) throws Exception {
@@ -87,7 +84,7 @@ public class ZipUtil {
         ZipOutputStream zos = new ZipOutputStream(bos);
 
         for (int i = 0; i < sourceFolders.length; i++) {
-            log.debug("开始压缩 ["+sourceFolders[i]+"] 到 ["+zipFilePath+"]");
+            log.debug("开始压缩 [" + sourceFolders[i] + "] 到 [" + zipFilePath + "]");
             File file = new File(sourceFolders[i]);
             String basePath = null;
             basePath = file.getParent();
@@ -101,9 +98,9 @@ public class ZipUtil {
     }
 
     /**
-     * <p> 
-     * 递归压缩文件 
-     * </p> 
+     * <p>
+     * 递归压缩文件
+     * </p>
      *
      * @param parentFile
      * @param basePath
@@ -124,25 +121,25 @@ public class ZipUtil {
         byte[] cache = new byte[CACHE_SIZE];
         for (File file : files) {
             if (file.isDirectory()) {
-                log.debug("目录："+file.getPath());
+                log.debug("目录：" + file.getPath());
 
                 basePath = basePath.replace('\\', '/');
-                if(basePath.substring(basePath.length()-1).equals("/")){
+                if (basePath.substring(basePath.length() - 1).equals("/")) {
                     pathName = file.getPath().substring(basePath.length()) + "/";
-                }else{
+                } else {
                     pathName = file.getPath().substring(basePath.length() + 1) + "/";
                 }
 
                 zos.putNextEntry(new ZipEntry(pathName));
                 zipFile(file, basePath, zos);
             } else {
-                pathName = file.getPath().substring(basePath.length()) ;
+                pathName = file.getPath().substring(basePath.length());
                 pathName = pathName.replace('\\', '/');
-                if(pathName.substring(0,1).equals("/")){
+                if (pathName.substring(0, 1).equals("/")) {
                     pathName = pathName.substring(1);
                 }
 
-                log.debug("压缩："+pathName);
+                log.debug("压缩：" + pathName);
 
                 is = new FileInputStream(file);
                 bis = new BufferedInputStream(is);
@@ -160,20 +157,17 @@ public class ZipUtil {
     /**
      * 解压zip文件
      *
-     * @param zipFileName
-     *            待解压的zip文件路径，例如：c:\\a.zip
-     *
-     * @param outputDirectory
-     *            解压目标文件夹,例如：c:\\a\
+     * @param zipFileName     待解压的zip文件路径，例如：c:\\a.zip
+     * @param outputDirectory 解压目标文件夹,例如：c:\\a\
      */
     public static void unZip(String zipFileName, String outputDirectory)
-            throws Exception {
+        throws Exception {
 
         Map<String, String> successMap = Maps.newHashMap();
         List<String> failures = Lists.newArrayList();
         int count = 0;
 
-        log.debug("开始解压 ["+zipFileName+"] 到 ["+outputDirectory+"]");
+        log.debug("开始解压 [" + zipFileName + "] 到 [" + outputDirectory + "]");
         ZipFile zipFile = new ZipFile(zipFileName);
 
         try {
@@ -211,11 +205,11 @@ public class ZipUtil {
                     if (fileName.indexOf("/") != -1) {
 
                         createDirectory(outputDirectory, fileName.substring(0,
-                                fileName.lastIndexOf("/")));
+                            fileName.lastIndexOf("/")));
 
                         fileName = fileName.substring(
-                                fileName.lastIndexOf("/") + 1,
-                                fileName.length());
+                            fileName.lastIndexOf("/") + 1,
+                            fileName.length());
 
                     }
 
@@ -225,7 +219,7 @@ public class ZipUtil {
                     }
 
                     File f = new File(outputDirectory + File.separator
-                            + zipEntry.getName());
+                        + zipEntry.getName());
 
                     f.createNewFile();
 
@@ -252,7 +246,7 @@ public class ZipUtil {
                 }
 
             }
-            log.debug("解压 ["+zipFileName+"] 完成！");
+            log.debug("解压 [" + zipFileName + "] 完成！");
 
         } catch (Exception ex) {
 
@@ -266,39 +260,39 @@ public class ZipUtil {
 
     private static void upload(File f, String name) {
         boolean isPhoto = Lists.newArrayList("jpg", "png", "GIF", "BMP", "pdf").stream().map(String::toLowerCase)
-                .anyMatch(name::contains);
+            .anyMatch(name::contains);
         if (!isPhoto) {
             log.error(name + "不是图片！");
             return;
         }
-        if (cosRemoteService != null) {
-            try {
+        try {
 
-                String url = cosRemoteService.uploadPublicFile(f, "", true);
-                if (!url.contains("http://public-10000230.file.myqcloud.com/")) {
-                    log.error("url 错误: " + url);
-                }
-                successMap.put(name, url.replace("http://public-10000230.file.myqcloud.com/", "https://pubimg.xingren.com/"));
-                if (count % 100 == 0) {
-                    try {
-                        count++;
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ie) {
-                        ie.printStackTrace();
-                    }
-                }
-            } catch (Exception ex) {
-                failures.add(name);
+            // todo upload file
+            String url = "";
+            if (!url.contains("http://public-10000230.file.myqcloud.com/")) {
+                log.error("url 错误: " + url);
             }
+            successMap.put(name, url.replace("http://public-10000230.file.myqcloud.com/", "https://pubimg.xingren.com/"));
+            if (count % 100 == 0) {
+                try {
+                    count++;
+                    Thread.sleep(1000);
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+            }
+        } catch (Exception ex) {
+            failures.add(name);
         }
     }
 
     /**
      * 创建目录
-     * @author hezhao
-     * @Time   2017年7月28日 下午7:10:05
+     *
      * @param directory
      * @param subDirectory
+     * @author hezhao
+     * @Time 2017年7月28日 下午7:10:05
      */
     private static void createDirectory(String directory, String subDirectory) {
 
@@ -340,10 +334,11 @@ public class ZipUtil {
 
     /**
      * 无需解压直接读取Zip文件和文件内容
-     * @author hezhao
-     * @Time   2017年7月28日 下午3:23:10
+     *
      * @param file 文件
      * @throws Exception
+     * @author hezhao
+     * @Time 2017年7月28日 下午3:23:10
      */
     public static void readZipFile(String file) throws Exception {
         java.util.zip.ZipFile zipFile = new java.util.zip.ZipFile(file);
@@ -354,11 +349,11 @@ public class ZipUtil {
             if (ze.isDirectory()) {
             } else {
                 log.info("file - " + ze.getName() + " : "
-                        + ze.getSize() + " bytes");
+                    + ze.getSize() + " bytes");
                 long size = ze.getSize();
                 if (size > 0) {
                     BufferedReader br = new BufferedReader(
-                            new InputStreamReader(zipFile.getInputStream(ze)));
+                        new InputStreamReader(zipFile.getInputStream(ze)));
                     String line;
                     while ((line = br.readLine()) != null) {
                         System.out.println(line);
@@ -374,7 +369,7 @@ public class ZipUtil {
 
     public static void main(String[] args) throws Exception {
         try {
-          unZip("/Users/yanwenbo/Desktop/y-workspace/零散文件/pg.zip", "/Users/yanwenbo/Desktop/y-workspace/零散文件/pg");
+            unZip("/Users/yanwenbo/Desktop/y-workspace/零散文件/pg.zip", "/Users/yanwenbo/Desktop/y-workspace/零散文件/pg");
             System.out.println("上传完成，总共上传：" + count);
             System.out.println("上传完成，成功：" + successMap.size());
             System.out.println("上传完成，失败：" + failures.size());
@@ -385,7 +380,7 @@ public class ZipUtil {
         }
     }
 
-    public static void writeFileContext(List<String>  strings) throws Exception {
+    public static void writeFileContext(List<String> strings) throws Exception {
 //        if (strings.isEmpty()) {
 //            return;
 //        }
@@ -402,10 +397,10 @@ public class ZipUtil {
     }
 
     public static void createCSVFile(Map<String, String> data) throws IOException {
-        String[] head = { "文件名", "图片URL"};
+        String[] head = {"文件名", "图片URL"};
         FileWriter out = new FileWriter("name_url_mapping.csv");
         try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT
-                .withHeader(head))) {
+            .withHeader(head))) {
             data.forEach((author, title) -> {
                 try {
                     printer.printRecord(author, title);

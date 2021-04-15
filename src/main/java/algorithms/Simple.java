@@ -115,6 +115,9 @@ public class Simple {
         return result;
     }
 
+    /**
+     * 罗马数组转换
+     */
     private int romanToInt(String s) {
         Map<String, Integer> map = new HashMap<>();
         map.put("I", 1);
@@ -143,6 +146,9 @@ public class Simple {
         return result;
     }
 
+    /**
+     * 罗马数组转换2
+     */
     private String intToRoman(Integer num) {
         int[] nums = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
         String[] roman = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
@@ -170,8 +176,6 @@ public class Simple {
             put("}", "{");
             put("]", "[");
         }};
-
-
 
         Stack<String> stack = new Stack<>();
 

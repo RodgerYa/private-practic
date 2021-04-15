@@ -1,8 +1,5 @@
-package algorithms;
+package algorithms.stackAndQueue;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Stack;
 
 class MinStack {

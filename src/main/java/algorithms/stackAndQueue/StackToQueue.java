@@ -1,8 +1,8 @@
-package algorithms;
+package algorithms.stackAndQueue;
 
 import java.util.Stack;
 
-public class Code {
+public class StackToQueue {
 
     /**
      * stack to queue

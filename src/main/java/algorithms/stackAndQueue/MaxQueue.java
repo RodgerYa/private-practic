@@ -1,7 +1,6 @@
-package algorithms;
+package algorithms.stackAndQueue;
 
 import java.util.LinkedList;
-import java.util.Stack;
 
 class MaxQueue {
 

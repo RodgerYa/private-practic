@@ -1,4 +1,4 @@
-package algorithms;
+package algorithms.string;
 
 public class SameCountSubString {
 

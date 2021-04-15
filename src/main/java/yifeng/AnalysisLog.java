@@ -1,3 +1,5 @@
+package yifeng;
+
 import com.google.common.collect.Lists;
 
 import java.io.*;
